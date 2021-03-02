@@ -10,6 +10,11 @@ class TargetData extends BaseController
         
     }
 
+    /**
+     * 
+     * @method view    
+     * Responsável por controlar as requisições de informações de CPF
+     */
     public function cpf($cpf)
     {
         $api = new TDApi();
@@ -19,17 +24,59 @@ class TargetData extends BaseController
         ];
         // Recupera o JSON e o Objeto do resultado
 		$response_raw = $api->localizarCPF($cpf);
-        $response = json_decode($response_raw)->result[0];        
-        
-        // Informações cruas
-        $data['raw'] = utf8_decode($response_raw);
+        try {
+            $response = json_decode($response_raw)->result[0]; 
+            
+            // Informações cruas
+            $data['raw'] = utf8_decode($response_raw);
 
-        // Dados Cadastrais
-        $data['cadastro'] = $response->pessoa->cadastral;
+            // Dados Cadastrais
+            $data['cadastro'] = $response->pessoa->cadastral;
 
-        // Contatos
-        $data['contato'] = $response->pessoa->contato;
+            // Contatos
+            $data['contato'] = $response->pessoa->contato;
 
-        echo view('buscacpf', $data);
+            echo view('buscacpf', $data); 
+
+        } catch (\Exception $err) {
+
+            echo view('production_err', ['errorcode' => $err->getCode(), 'error' => $err->getMessage()]);
+            
+        }                         
+    }
+
+    /**
+     * 
+     * @method view    
+     * Responsável por controlar as requisições de informações de CNPJ
+     */
+    public function cnpj($cnpj)
+    {
+        $api = new TDApi();
+
+        $data = [
+            'title' => 'Busca por CNPJ'
+        ];
+        // Recupera o JSON e o Objeto do resultado
+		$response_raw = $api->localizarCNPJ($cnpj);
+        try {
+            $response = json_decode($response_raw)->result[0]; 
+            
+            // Informações cruas
+            $data['raw'] = utf8_decode($response_raw);
+
+            // Dados Cadastrais
+            $data['cadastro'] = $response->empresa->cadastral;
+
+            // Contatos
+            $data['contato'] = $response->empresa->contato;
+
+            echo view('buscacpf', $data); 
+
+        } catch (\Exception $err) {
+
+            echo view('production_err', ['errorcode' => $err->getCode(), 'error' => $err->getMessage()]);
+            
+        }   
     }
 }

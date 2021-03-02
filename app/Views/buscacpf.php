@@ -7,9 +7,14 @@
     <title><?= esc($title); ?></title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-    
+    <link rel="stylesheet" href="/static/css/main.css">
+
 </head>
 <body>
+
+    <div class='s-pre-con'>
+        <img src="/static/img/loader.gif" alt="Loading cool animation">
+    </div>
 
     <div class="row">
         <div class="col-8">
@@ -51,8 +56,50 @@
         <h2>Contatos</h2> 
         <hr>
 
+        <h6>Telefones</h6>
         <div class="row">
-        <?php foreach($contato->telefone as $telefones): ?> 
+        <?php $idNumero = 0; ?>
+        <?php foreach($contato->telefone as $telefones): ?>         
+            <div class="col">
+                <table class="table table-striped table-responsive w-100 d-block d-md-table">
+                    <thead>
+                        <tr>                                           
+                            <th scope="col">Chave</th>
+                            <th scope="col">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    <?php $indexVal = 0; $telefone = ''; ?>                                   
+                    <?php foreach($telefones as $ch => $val): ?>
+                        <?php if(!empty($val) && $ch != 'ordem'): ?>
+                        <tr>
+                            <td><?= esc($ch); ?></td>
+                            <td><?= esc($val); ?></td>
+                        </tr>
+                        <?php if($indexVal == 0 || $indexVal == 1){
+                            $telefone .= $val;
+                        } ?>                                                
+                        <?php $indexVal++; ?>                                   
+                        <?php endif ?>
+                    <?php endforeach ?>                        
+                    </tbody>                           
+                </table>
+                <input type="text" name="telefone<?= $idNumero ?>" id="telefone<?= $idNumero ?>" value="<?= $telefone ?>" style="position:absolute;left:-9999px;z-index:-9999;">
+                <button type="button" class="btn btn-success ml-4" onclick="copyClip('telefone<?= $idNumero ?>')">Copiar</button>  
+            </div>
+        <?php $idNumero++; ?>
+        <?php endforeach ?>
+        </div>
+        <script>
+            function copyClip($idVal){
+                 $('#'+$idVal).select();                            
+                document.execCommand("copy");
+            }
+        </script>
+
+        <h6>Emails</h6>
+        <div class="row">
+        <?php foreach($contato->email as $emails): ?> 
             <div class="col">
                 <table class="table table-striped table-responsive w-100 d-block d-md-table">
                     <thead>
@@ -62,7 +109,7 @@
                         </tr>
                     </thead>
                     <tbody id="table-body">                                   
-                    <?php foreach($telefones as $ch => $val): ?>
+                    <?php foreach($emails as $ch => $val): ?>
                         <?php if(!empty($val) && $ch != 'ordem'): ?>
                         <tr>
                             <td><?= esc($ch); ?></td>
@@ -143,6 +190,11 @@
     $('#btnTogRaw').text(state.btnTxt);
     $('#controlRaw').html("<pre>"+JSON.stringify(state.rawJSON, null, '\t')+"</pre>");
     $('#controlRaw').hide();
+
+    $('.s-pre-con').show();
+    $(document).ready(() => {
+        $('.s-pre-con').hide();
+    });
 </script>
 </body>
 </html>
