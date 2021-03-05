@@ -190,7 +190,8 @@
 
 	<div class="container text-center">
 
-		<h1 class="headline">Erro código: <?= esc($errorcode) ?></h1>
+		<h1 class="headline">:(</h1>
+		<h5>Erro código: <?= esc($errorcode) ?></h5>
 
 		<p class="lead">Houve um pequeno problema... Envie o texto a seguir para a equipe de desenvolvimento: </p>
 		<p class="lead"><?= esc($error) ?></p>

@@ -36,12 +36,15 @@ class TargetData extends BaseController
             // Contatos
             $data['contato'] = $response->pessoa->contato;
 
-            echo view('buscacpf', $data); 
+            echo view('buscacpf', $data);             
 
         } catch (\Exception $err) {
 
-            echo view('production_err', ['errorcode' => $err->getCode(), 'error' => $err->getMessage()]);
-            
+            if($err->getCode() == 0){
+                echo view('production_err', ['errorcode' => $err->getCode(), 'error' => 'Infelizmente o serviço de busca está fora do ar']);    
+            } else {
+                echo view('production_err', ['errorcode' => $err->getCode(), 'error' => $err->getMessage()]);
+            }                        
         }                         
     }
 
